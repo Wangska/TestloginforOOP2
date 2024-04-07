@@ -255,7 +255,7 @@ public class Registerform extends javax.swing.JFrame {
         }else if(emailcheck()){
             System.out.println("Duplicate Exist!");
             
-        }else if(regcontact.getText().length() > 11 || regcontact.getText().length() < 11){
+        }else if(regcontact.getText().length() != 11 ){
             JOptionPane.showMessageDialog(null, "Contact Number should be 11");
             regcontact.setText("");
             

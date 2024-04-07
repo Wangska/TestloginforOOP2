@@ -36,8 +36,8 @@ public class loginform extends javax.swing.JFrame {
         }catch(SQLException e) {
             System.out.println(""+e);
         return false;
+        }
     }
-}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -161,15 +161,17 @@ public class loginform extends javax.swing.JFrame {
         if (loginAcc(juser.getText(), jpass.getText())) {
             String username = juser.getText();
         if (isAdmin(username)) {
-        JOptionPane.showMessageDialog(null, "Login Successfully as admin");
-        admindash ads = new admindash();
-        ads.setVisible(true);
+            JOptionPane.showMessageDialog(null, "Login Successfully as admin");
+            admindash ads = new admindash();
+            ads.setVisible(true);
+            this.dispose();
         } else {
             JOptionPane.showMessageDialog(null, "Login Successfully as user");
             userdash uds = new userdash();
             uds.setVisible(true);
+            this.dispose();
         }
-        this.dispose(); // Close the login window
+        this.dispose(); 
         } else {
             JOptionPane.showMessageDialog(null, "Invalid User or Password");
         }

@@ -8,35 +8,55 @@ package adminfolder;
 import config.dbConnector;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import net.proteanit.sql.DbUtils;
+import java.util.Vector;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Sofia
  */
-public class usersForm extends javax.swing.JFrame {
+public final class usersForm extends javax.swing.JFrame {
 
     /**
      * Creates new form admindash
      */
     public usersForm() {
         initComponents();
-        displayData();
+        table_load();
     }
     
-    public void displayData(){
-        try{
+    public void table_load(){
+    
+        try {
+        
             dbConnector dbc = new dbConnector();
+              
             ResultSet rs = dbc.getData("SELECT id,firstname,lastname,email FROM users");
-            users_table.setModel(DbUtils.resultSetToTableModel(rs));
-             rs.close();
-        }catch(SQLException ex){
-            System.out.println("Errors: "+ex.getMessage());
+            DefaultTableModel dt = (DefaultTableModel) users_table.getModel();
+            dt.setRowCount(0);
+ 
+            while(rs.next()){
+            
+                Vector v = new Vector();
+                
+                v.add(rs.getString(1));
+                v.add(rs.getString(2));
+                v.add(rs.getString(3));
+                v.add(rs.getString(4));
+                
+                dt.addRow(v);
+            
+            }
+       
+        
+        }catch (SQLException e){
+            
+            System.out.println(e);
         
         }
-        
     
     }
+ 
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -68,9 +88,17 @@ public class usersForm extends javax.swing.JFrame {
 
             },
             new String [] {
-
+                "ID", "First Name", "Last Name", "Email"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         users_table.setCellSelectionEnabled(true);
         users_table.getTableHeader().setResizingAllowed(false);
         users_table.getTableHeader().setReorderingAllowed(false);
