@@ -6,6 +6,7 @@ import config.dbConnector;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
+import userfolder.userdash;
 
 public class loginform extends javax.swing.JFrame {
 
@@ -17,16 +18,26 @@ public class loginform extends javax.swing.JFrame {
     public static boolean loginAcc(String username1, String password1){
         dbConnector connector = new dbConnector();
         try{
-            String query = "SELECT * FROM users WHERE username ='"+username1+"' AND password ='"+password1+"' ";
+            String query = "SELECT * FROM users WHERE username ='"+username1+"' AND password ='"+password1+"' AND status ='Active' ";
             ResultSet resultSet = connector.getData(query);
-            return resultSet.next();
-        
-        
+            return resultSet.next(); 
         }catch(SQLException e){
         return false;
         }
     
     }
+    
+    public static boolean isAdmin(String username) {
+        dbConnector connector = new dbConnector();
+        try {
+            String query = "SELECT * FROM users WHERE username ='" + username + "' AND account_type ='Admin'";
+            ResultSet resultSet = connector.getData(query);
+            return resultSet.next();
+        }catch(SQLException e) {
+            System.out.println(""+e);
+        return false;
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -147,16 +158,21 @@ public class loginform extends javax.swing.JFrame {
     private void jloginbtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jloginbtn1ActionPerformed
         // login button
         
-        if(loginAcc(juser.getText(),jpass.getText())){
-           JOptionPane.showMessageDialog(null,"Login Successfully");
-           admindash ads = new admindash();
-           ads.setVisible(true);
-           this.dispose();
-       }else{
-           JOptionPane.showMessageDialog(null, "Invalid User or Password");
-           
-        
-       }
+        if (loginAcc(juser.getText(), jpass.getText())) {
+            String username = juser.getText();
+        if (isAdmin(username)) {
+        JOptionPane.showMessageDialog(null, "Login Successfully as admin");
+        admindash ads = new admindash();
+        ads.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(null, "Login Successfully as user");
+            userdash uds = new userdash();
+            uds.setVisible(true);
+        }
+        this.dispose(); // Close the login window
+        } else {
+            JOptionPane.showMessageDialog(null, "Invalid User or Password");
+        }
         
     }//GEN-LAST:event_jloginbtn1ActionPerformed
 
